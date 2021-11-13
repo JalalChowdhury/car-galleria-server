@@ -31,6 +31,7 @@ async function run() {
         const ordersCollection = database.collection('orders');
         const reviewsCollection = database.collection('reviews');
         const usersCollection = database.collection('users');
+        const contactCollection = database.collection('contact');
 
         /*------------------------------------------------
                 start get ,set, update api
@@ -63,8 +64,6 @@ async function run() {
         app.get('/orders', async (req, res) => {
             const cursor = ordersCollection.find({});
             const orders = await cursor.toArray();
-
-
             res.send(orders);
         })
 
@@ -81,8 +80,6 @@ async function run() {
         app.get('/reviews', async (req, res) => {
             const cursor = reviewsCollection.find({});
             const reviews = await cursor.toArray();
-
-
             res.send(reviews);
         })
 
@@ -96,6 +93,13 @@ async function run() {
                 isAdmin = true;
             }
             res.json({ admin: isAdmin });
+        })
+
+        // GET Contact message API
+        app.get('/contact', async (req, res) => {
+            const cursor = contactCollection.find({});
+            const message = await cursor.toArray();
+            res.send(message);
         })
 
 
@@ -125,6 +129,16 @@ async function run() {
             // console.log("reviews are .. : ",result);
             res.json(result);
         });
+
+
+        // Contact message  store
+        app.post('/contact', async (req, res) => {
+            const message = req.body;
+            const result = await contactCollection.insertOne(message);
+            res.json(result);
+        });
+
+
 
         /* ------------- Delete API ---------------- */
         // Delete order 
